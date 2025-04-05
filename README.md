@@ -88,17 +88,6 @@ for i in $(objdump -d shellcode.o | grep "^ " | cut -f2); do echo -n '\x'$i; don
 ```
 
 
-### Manual Shellcode Compilation
-
-You can also compile and extract shellcodes manually:
-
-```bash
-# Step 1: Compile the shellcode
-nasm -f elf64 shellcode/Linux64bits/basic_bash/shellcode.asm -o shellcode.o
-
-# Step 2: Extract the shellcode bytes
-for i in $(objdump -d shellcode.o | grep "^ " | cut -f2); do echo -n '\x'$i; done; echo
-```
 
 ## Shellcode Collection
 

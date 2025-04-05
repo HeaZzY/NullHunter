@@ -1,69 +1,121 @@
 # NullHunter
 
-> A collection of null-byte free shellcodes for exploitation and binary pwning
+![NullHunter-removebg-preview](https://github.com/user-attachments/assets/42b5d78c-0172-4846-85c2-c1b39d503fb5)
 
-NullHunter is a curated repository of ready-to-use null-byte free shellcodes written in assembly for various architectures. Designed for CTF players, security researchers, and penetration testers who need reliable shellcodes for binary exploitation challenges.
 
-## Overview
+> A specialized toolkit for null-byte free shellcode management and exploitation
 
-This repository contains hand-crafted shellcodes that:
-- Contain no null bytes (0x00) to bypass common string handling vulnerabilities
-- Are optimized for size to fit in constrained buffer spaces
-- Support multiple techniques including XOR encoding for AV evasion
-- Are organized by architecture (32-bit, 64-bit) and functionality (bind shell, reverse shell, etc.)
+NullHunter is a comprehensive solution for security researchers, CTF players, and penetration testers who work with shellcodes. It provides both a curated collection of null-byte free shellcodes and a graphical management interface for easy selection, viewing, and deployment of these shellcodes.
 
-## Structure
+## Features
 
-```
-NullHunter/
-├── Linux 32 bits/          # 32-bit Linux shellcodes
-│   ├── exec_shell.asm      # Execute /bin/sh
-│   ├── reverse_shell.asm   # Reverse shell
-│   └── ...
-├── Linux 64 bits/          # 64-bit Linux shellcodes
-│   ├── Basic_sh.asm        # Basic execve /bin/sh
-│   ├── Basic_Bash.asm      # Basic execve /bin/bash
-│   ├── bash_with_string.asm # Execve with string obfuscation
-│   └── ...
-├── Windows/                # Windows shellcodes
-│   ├── 32 bits/
-│   └── 64 bits/
-├── NullHunter.py         # Shellcode extraction utility
-└── README.md
+- **Null-Byte Free Shellcodes**: All included shellcodes are carefully crafted to contain no null bytes (0x00), making them suitable for exploiting string handling vulnerabilities
+- **Graphical Interface**: Easy-to-use shellcode selection and management GUI
+- **Multi-Architecture Support**: Organized collection for different architectures (currently focused on Linux 64-bit)
+- **Code Snippets**: Automatic generation of C code snippets for easy integration
+- **Size Optimization**: Shellcodes are optimized for minimal size to fit in constrained buffer spaces
+- **Obfuscation Techniques**: Includes techniques like XOR encoding for AV evasion
+
+## Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/NullHunter.git
+cd NullHunter
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run NullHunter
+python NullHunter.py
 ```
 
 ## Usage
 
-### Compiling Shellcodes
+### Graphical Interface
+
+Launch the GUI application to interactively work with shellcodes:
+
+```bash
+python NullHunter.py
+```
+
+The interface has two main tabs:
+1. **Shellcode Selection**: Browse and select from available shellcodes
+2. **Shellcode Output**: View the selected shellcode in hex format and get the corresponding C code snippet
+
+### Command-Line Usage
+
+NullHunter also supports command-line operation for integration into scripts and automation:
+
+```bash
+# Basic usage
+python NullHunter.py Linux64bits/basic_bash -a elf64 -o shellcode.txt -c
+
+# List available shellcodes
+python NullHunter.py --list
+
+# Get help
+python NullHunter.py --help
+```
+
+### Manual Shellcode Compilation
+
+You can also compile and extract shellcodes manually:
 
 ```bash
 # Step 1: Compile the shellcode
-nasm -f elf64 Linux\ 64\ bits/Basic_sh.asm -o shellcode.o
+nasm -f elf64 shellcode/Linux64bits/basic_bash/shellcode.asm -o shellcode.o
 
 # Step 2: Extract the shellcode bytes
 for i in $(objdump -d shellcode.o | grep "^ " | cut -f2); do echo -n '\x'$i; done; echo
 ```
 
-### Using with NullHunter.py
+## Shellcode Collection
 
-```bash
-# Launch the GUI
-python3 NullHunter.py
+### Currently Available Shellcodes
 
-# CLI mode
-python3 NullHunter.py Linux64bits/Basic_sh.asm -a elf64 -o shellcode.txt -c
+| Name | Architecture | Description | Size |
+|------|--------------|-------------|------|
+| bash_with_string | Linux 64 bits | Execve /bin/bash with string obfuscation | Varies |
+| basic_bash | Linux 64 bits | Basic execve /bin/bash | 45 bytes |
+| basic_sh | Linux 64 bits | Basic execve /bin/sh | Varies |
+| XoredBash | Linux 64 bits | XOR-encoded /bin/bash execution | Varies |
+
+### Adding Custom Shellcodes
+
+To add your own shellcode to the collection:
+
+1. Create a new directory under the appropriate architecture folder
+2. Add your assembly code as `shellcode.asm` with detailed comments
+3. Optionally include a `raw.txt` file with the compiled shellcode bytes
+4. Restart NullHunter to load your new shellcode
+
+## Project Structure
+
+```
+NullHunter/
+├── NullHunter.py        # Main application
+├── README.md            # This file
+├── requirements.txt     # Python dependencies
+└── shellcode/           # Shellcode collection
+    └── Linux64bits/     # Linux 64-bit shellcodes
+        ├── bash_with_string/
+        │   ├── raw.txt
+        │   └── shellcode.asm
+        ├── basic_bash/
+        │   ├── raw.txt
+        │   └── shellcode.asm
+        ├── basic_sh/
+        │   ├── raw.txt
+        │   └── shellcode.asm
+        └── XoredBash/
+            ├── raw.txt
+            └── shellcode.asm
 ```
 
-## Contribution
-
-Feel free to contribute your own null-byte free shellcodes:
-
-1. Fork the repository
-2. Add your shellcode in the appropriate directory
-3. Add comments to explain your shellcode
-4. Include a brief description in the commit message
-5. Create a pull request
 
 ## Disclaimer
 
-These shellcodes are provided for educational and legitimate security testing purposes only. Use them responsibly and only on systems you have permission to test.
+NullHunter and its shellcodes are provided for educational and legitimate security testing purposes only. Use them responsibly and only on systems you have permission to test. The creators are not responsible for any misuse or damage caused by this tool.
+
